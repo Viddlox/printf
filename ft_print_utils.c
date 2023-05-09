@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_utils.c                                      :+:      :+:    :+:   */
+/*   ft_print_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: micheng <micheng@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 19:08:34 by micheng           #+#    #+#             */
-/*   Updated: 2023/05/09 15:43:54 by micheng          ###   ########.fr       */
+/*   Updated: 2023/05/10 02:26:10 by micheng          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,6 @@ void	ft_putchar(char c)
 	write(1, &c, 1);
 }
 
-void	ft_putnbr(int n)
-{
-	if (n == -2147483648)
-		write(1, "-2147483648", 11);
-	else if (n < 0)
-	{
-		ft_putchar('-');
-		n = -n;
-	}
-	else if (n > 9)
-	{
-		ft_putnbr(n / 10);
-		ft_putnbr(n % 10);
-	}
-	else
-		ft_putchar(n + 48);
-}
-
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -56,17 +38,37 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(char *str)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	int		i;
-	char	*out;
+	unsigned char	*ptr;
+	size_t			i;
 
-	out = malloc(sizeof(char *) * (ft_strlen(str) + 1));
-	if (!out)
-		return (NULL);
+	ptr = b;
 	i = 0;
-	while (i < out)
-		out[i++] = str[i++];
+	while (len--)
+	{
+		ptr[i] = c;
+		i++;
+	}
+	return (b);
+}
+
+char	*ft_capitalize(const char *str)
+{
+	char	*out;
+	int		i;
+
+	out = malloc(sizeof(char) * (ft_strlen(str) + 1));
+	if (!out)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		out[i] = str[i];
+		if (str[i] >= 'a' && str[i] <= 'z')
+			out[i] -= 32;
+		i++;
+	}
 	out[i] = '\0';
 	return (out);
 }

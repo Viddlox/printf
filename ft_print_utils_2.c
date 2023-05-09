@@ -1,57 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   atoi_base_utils.c                                  :+:      :+:    :+:   */
+/*   ft_print_utils_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: micheng <micheng@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/09 15:44:04 by micheng           #+#    #+#             */
-/*   Updated: 2023/05/09 15:45:45 by micheng          ###   ########.fr       */
+/*   Created: 2023/05/10 02:10:17 by micheng           #+#    #+#             */
+/*   Updated: 2023/05/10 02:51:06 by micheng          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*ft_assign_num(char *str, long n, int i)
+void	ft_putnbr(int n)
 {
-	str [i] = '\0';
-	if (n < 0)
+	if (n == -2147483648)
+		write(1, "-2147483648", 11);
+	else if (n < 0)
 	{
-		str[0] = '-';
-		n = -n;
-		while (--i != 0)
-		{
-			str[i] = n % 10 + '0';
-			n /= 10;
-		}
+		write(1, "-", 1);
+		ft_putnbr(n * -1);
 	}
-	while (--i >= 0)
+	else if (n > 9)
 	{
-		str[i] = n % 10 + '0';
-		n /= 10;
+		ft_putnbr(n / 10);
+		ft_putnbr(n % 10);
 	}
-	str[i] = '\0';
-	return (str);
+	else
+		ft_putchar(n + '0');
 }
 
-char	*ft_itoa(int n)
+char	*ft_strdup(char *s)
 {
 	int		i;
-	long	temp;
-	char	*str;
+	char	*dest;
 
-	n = temp;
 	i = 0;
-	while (n <= 0)
+	while (s[i])
 		i++;
-	while (temp != 0)
+	dest = malloc(sizeof(char) * (i + 1));
+	if (!dest)
+		return (0);
+	i = 0;
+	while (s[i])
 	{
-		temp /= 10;
+		dest[i] = s[i];
 		i++;
 	}
-	str = malloc(sizeof(char) * (i + 1));
-	if (!str)
-		return (NULL);
-	temp = n;
-	return (ft_assign_num(str, temp, i));
+	dest[i] = '\0';
+	return (dest);
 }
