@@ -6,7 +6,7 @@
 /*   By: micheng <micheng@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 17:14:18 by micheng           #+#    #+#             */
-/*   Updated: 2023/05/10 02:46:56 by micheng          ###   ########.fr       */
+/*   Updated: 2023/05/14 15:01:59 by micheng          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,69 +14,81 @@
 
 int	ft_printf(const char *str, ...)
 {
-	va_list		args;
-	int			count;
+	va_list	args;
+	int		count;
+	int		i;
 
 	count = 0;
+	i = 0;
 	va_start(args, str);
 	if (!str)
 		return (-1);
-	while (*str)
+	while (str[i])
 	{
-		if (*str == '%')
-			count += ft_parse(args, &str);
+		if (str[i] == '%')
+		{
+			count += ft_parse(args, str[i + 1]);
+			i += 2;
+		}
 		else
 		{
-			ft_putchar(*str);
-			count++;
-			str++;
+			count += ft_putchar(str[i]);
+			i++;
 		}
 	}
 	va_end(args);
 	return (count);
 }
 
-static int	ft_parse(va_list args, const char **str)
+int	ft_parse(va_list args, char s)
 {
-	char	*hex_str;
+	int		count;
+	char	*unsigned_str;
 
-	if (**str == '%')
+	count = 0;
+	if (s == 'X' || s == 'x')
+		count += ft_hexdec(va_arg(args, unsigned int), s);
+	else if (s == 'd' || s == 'i')
+		count += ft_putnbr(va_arg(args, int));
+	else if (s == 'c')
+		count += ft_putchar(va_arg(args, int));
+	else if (s == '%')
+		count += ft_putchar('%');
+	else if (s == 's')
+		count += ft_putstr(va_arg(args, char *));
+	else if (s == 'p')
+		count += ft_pointer(va_arg(args, void *));
+	else if (s == 'u')
 	{
-		(*str)++;
-		if (**str == 's')
-			ft_putstr(va_arg(args, char *));
-		else if (**str == 'd')
-			ft_putnbr(va_arg(args, int));
-		else if (**str == '%')
-			ft_putchar('%');
-		else if (**str == 'c')
-			ft_putchar(va_arg(args, int));
-		else if (**str == 'X' || **str == 'x')
-		{
-			hex_str = ft_itoa_base(va_arg(args, int), 16);
-			if (**str == 'X')
-				hex_str = ft_capitalize(hex_str);
-			ft_putstr("0x");
-			ft_putstr(hex_str);
-			free(hex_str);
-		}
-		return (-1);
+		unsigned_str = ft_itoa_base(va_arg(args, unsigned int), BASE_10);
+		count += ft_putstr(unsigned_str);
+		free(unsigned_str);
 	}
-	else
-		ft_putchar(**str);
-	return (0);
+	return (count);
 }
 
+/*
 int	main(void)
 {
-    int i = 42;
-    char *str = "Hello, world!";
+ 	int i = 42;
+	int	j = 41;
+	int	*ptr;
+
+	ptr = &i;
+    char *str = "Hello world!";
 	ft_printf("Testing ft_printf\n");
 	ft_printf("Integer: %d\n", i);
-    ft_printf("String: %s\n", str);
-	ft_printf("Hex: %x | HEX: %X\n", i, i);
-	ft_printf("Character: %c\n", 'a');
+	ft_printf("Integer: %i\n", j);
+	ft_printf("Integer: %u\n", j);
+    ft_printf(" NULL %s NULL \n", NULL);
+	printf(" NULL %s NULL \n", NULL);
+	//ft_printf(" %X | %X\n", 1, 1);
+	//printf(" %X | %X\n", 1, 1);
+	ft_printf("Character: %c\n", '0');
 	ft_printf("Percent sign: %%\n");
-	ft_printf("Integer: %d | String: %s", i, str);
+	ft_printf("Integer: %d | String: %s\n", i, str);
+	ft_printf("Pointer: %p\n", ptr);
+	printf("Pointer real: %p\n", ptr);
     return (0);
 }
+*/
