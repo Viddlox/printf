@@ -37,8 +37,6 @@ int	ft_putunbr_pf(unsigned long n)
 	int	i;
 
 	i = 0;
-	if (n == 0)
-		return (write(1, "0", 1));
 	if (n >= 10)
 		i += ft_putunbr_pf(n / 10);
 	i += write(1, &DECIMAL[n % 10], 1);
